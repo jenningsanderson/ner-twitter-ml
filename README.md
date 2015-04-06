@@ -18,4 +18,31 @@
 Annotated Tweets from various disasters: floods, hurricanes, tornadoes, etc.
 
 ####Data Structure
-(Sample of Data file here)
+	["94537339",
+	 {"tweet_id"=>"94537339",
+	  "domain"=>"Wildfire",
+	  "disaster"=>"Colorado Wildfires June 2012",
+	  "words"=>
+	   [["The", "Location"],
+	    ["entire", "Location"],
+	    ["state", "Location"],
+	    ["of", "Location"],
+	    ["Colorado", "Location"],
+	    ["is", ""],
+	    ["on", ""],
+	    ["fire", ""],
+	    ["right", ""],
+	    ["now", ""],
+	    [".", ""],
+	    ["CNN", "Organization"],
+	    ["is", ""],
+	    ["playing", ""],
+	    ["an", ""],
+	    ["Amy", ""],
+	    ["Winehouse", ""],
+	    ["story", ""],
+	    [".", ""],
+	    ["#", ""],
+	    ["WaldoCanyonFire", ""]],
+	  "text"=>
+	   "The entire state of Colorado is on fire right now . CNN is playing an Amy Winehouse story . # WaldoCanyonFire"}]
