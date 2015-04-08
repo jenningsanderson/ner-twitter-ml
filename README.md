@@ -17,7 +17,9 @@
 ###Data
 Annotated Tweets from various disasters: floods, hurricanes, tornadoes, etc.
 
-####Data Structure
+####Example Data Structure
+```tweets.json```:
+	
 	["94537339",
 	 {"tweet_id"=>"94537339",
 	  "domain"=>"Wildfire",
