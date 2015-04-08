@@ -1,6 +1,5 @@
 import json
 
-
 def load_json_tweets(file, limit=None):
     """
     Load the JSON file of tweets
@@ -17,7 +16,6 @@ def load_json_tweets(file, limit=None):
             i+=1
 
     return tweets
-
 
 if __name__ == '__main__':
     x = load_json_tweets('tweets.json', 10)
