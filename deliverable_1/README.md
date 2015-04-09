@@ -22,23 +22,28 @@ Precision : For each instance predicted as a named entity, was that entity actua
 Recall : For each instance that is actual a named entity, was it predicted as a named entity.
 F1 : Harmonic mean of Precision and Recall
 
-The evaluations done here were based on partial matches. That is, if any word in an entity span was tagged correctly, the entire span is marked correct. For example, if the gold standard sentence is :
+The evaluations done here were based on partial matches. That is, if any word in an entity span was tagged correctly, the entire span is marked correct. For example, if the sentence is :
+
+Word		Gold Tag       Pred Tag
 The 		Loc<br>
 entire		Loc<br>
 state		Loc<br>
 of		Loc<br>
-Colorado	Loc<br>
-is
-on
-fire
-right
-now.
-CNN		Org
-is
-playing
-an
-Amy		Per
-winehouse	Per
-story
+Colorado	Loc		Loc<br>
+is<br>
+on<br>
+fire<br>
+right<br>
+now<br>
+.<br>
+CNN		Org		Org<br>
+is<br>
+playing<br>
+an<br>
+Amy		Per		Per<br>
+winehouse	Per		Per<br>
+story<br>
 
-![alt text](https://github.com/jenningsanderson/ner-twitter-ml/blob/master/deliverable_1/caps_by_domain.png "caps by domain")
+If the predicted annotation only marks "Colorado" as Loc, it counts the entire span "The entire state of Colorado" as correct. In the above data, this sentence would have 3 total spans, and 3 spans correct. Exact spans are much harder to match.
+
+![alt text](https://github.com/jenningsanderson/ner-twitter-ml/blob/master/deliverable_1/caps_by_domain.png "caps by domain, partial match")
