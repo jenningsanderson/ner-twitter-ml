@@ -9,4 +9,4 @@ First Deliverable (April 10, 2015)
 
 
 ###Results
-![alt text](https://github.com/jenningsanderson/ner-twitter-ml/tree/master/deliverable_1/caps_by_domain.png "caps by domain")
+![alt text](https://github.com/jenningsanderson/ner-twitter-ml/blob/master/deliverable_1/caps_by_domain.png "caps by domain")
