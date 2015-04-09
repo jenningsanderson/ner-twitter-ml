@@ -17,6 +17,9 @@ def load_json_tweets(file, limit=None):
 
     return tweets
 
+
+def tweet_to_
+
 if __name__ == '__main__':
     x = load_json_tweets('tweets.json')
     print "Loaded %d Tweets" %( len(x) )

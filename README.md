@@ -18,31 +18,62 @@
 Annotated Tweets from various disasters: floods, hurricanes, tornadoes, etc.
 
 ####Example Data Structure of tweets.json
-{
-key: u'95119995'
-domain: u'Wildfire'
-disaster: u'Colorado Wildfires June 2012'
-{u'text': u'Feel', u'features': [], u'annotations': u''}
-{u'text': u'bad', u'features': [], u'annotations': u''}
-{u'text': u'for', u'features': [], u'annotations': u''}
-{u'text': u'reporter', u'features': [], u'annotations': u'Person'}
-{u'text': u'trying', u'features': [], u'annotations': u'Person'}
-{u'text': u'to', u'features': [], u'annotations': u'Person'}
-{u'text': u'describe', u'features': [], u'annotations': u'Person'}
-{u'text': u'evacuation', u'features': [], u'annotations': u'Person'}
-{u'text': u'/', u'features': [], u'annotations': u''}
-{u'text': u'allowed', u'features': [], u'annotations': u''}
-{u'text': u'back', u'features': [], u'annotations': u''}
-{u'text': u'situation', u'features': [], u'annotations': u''}
-{u'text': u'.', u'features': [], u'annotations': u''}
-{u'text': u'Gosh', u'features': [], u'annotations': u''}
-{u'text': u',', u'features': [], u'annotations': u''}
-{u'text': u'Colorado', u'features': [], u'annotations': u'Location Facility'}
-{u'text': u'Springs', u'features': [], u'annotations': u'Location Facility'}
-{u'text': u'roads', u'features': [], u'annotations': u'Facility'}
-{u'text': u'are', u'features': [], u'annotations': u''}
-{u'text': u'confusing', u'features': [], u'annotations': u''}
-{u'text': u'!', u'features': [], u'annotations': u''}
-{u'text': u'#', u'features': [], u'annotations': u''}
-{u'text': u'WaldoCanyonFire', u'features': [], u'annotations': u''}
-}
+
+    {
+      key: '95119995'
+      domain: 'Wildfire'
+      disaster: 'Colorado Wildfires June 2012'
+      {'text': 'Feel', 'features': [], 'annotations': ''}
+      {'text': 'bad', 'features': [], 'annotations': ''}
+      {'text': 'for', 'features': [], 'annotations': ''}
+      {
+        'text': 'reporter',
+        'features': [],
+        'annotations': 'Person'
+      }
+      {
+        'text': 'trying',
+        'features': [],
+        'annotations': 'Person'
+      }
+      {
+        'text': 'to',
+        'features': [],
+        'annotations': 'Person'
+      }
+      {
+        'text': 'describe',
+        'features': [],
+        'annotations': 'Person'
+      }
+      {
+        'text': 'evacuation', 'features': [], 'annotations': 'Person'
+      }
+      {'text': '/', 'features': [], 'annotations': ''}
+      {'text': 'allowed', 'features': [], 'annotations': ''}
+      {'text': 'back', 'features': [], 'annotations': ''}
+      {'text': 'situation', 'features': [], 'annotations': ''}
+      {'text': '.', 'features': [], 'annotations': ''}
+      {'text': 'Gosh', 'features': [], 'annotations': ''}
+      {'text': ',', 'features': [], 'annotations': ''}
+      {
+        'text': 'Colorado',
+        'features': [],
+        'annotations': 'Location Facility'
+      }
+      {
+        'text': 'Springs',
+        'features': [],
+        'annotations': 'Location Facility'
+      }
+      {
+        'text': 'roads',
+        'features': [],
+        'annotations': 'Facility'
+      }
+      {'text': 'are', 'features': [], 'annotations': ''}
+      {'text': 'confusing', 'features': [], 'annotations': ''}
+      {'text': '!', 'features': [], 'annotations': ''}
+      {'text': '#', 'features': [], 'annotations': ''}
+      {'text': 'WaldoCanyonFire', 'features': [], 'annotations': ''}
+    }
