@@ -24,9 +24,25 @@ F1 : Harmonic mean of Precision and Recall
 
 The evaluations done here were based on partial matches. That is, if any word in an entity span was tagged correctly, the entire span is marked correct. For example, if the sentence is :
 <table>
-  <tr>
-    <td>Word</td><td>Gold Tag</td><td>Pred Tag</td>
-  </tr>
+  <tr><td>Word</td><td>Gold Tag</td><td>Pred Tag</td></tr>
+  <tr><td>The</td><td>Loc</td><td>None</td></tr>
+  <tr><td>entire</td><td>Loc</td><td>None</td></tr>
+  <tr><td>state</td><td>Loc</td><td>None</td></tr>
+  <tr><td>of</td><td>Loc</td><td>None</td></tr>
+  <tr><td>Colorado</td><td>Loc</td><td>Loc</td></tr>
+  <tr><td>is</td><td></td><td>None</td></tr>
+  <tr><td>on</td><td></td><td>None</td></tr>
+  <tr><td>fire</td><td></td><td>None</td></tr>
+  <tr><td>right</td><td></td><td>None</td></tr>
+  <tr><td>now</td><td></td><td>None</td></tr>
+  <tr><td>.</td><td></td><td>None</td></tr>
+  <tr><td>CNN</td><td>Org</td><td>Org</td></tr>
+  <tr><td>is</td><td></td><td>None</td></tr>
+  <tr><td>playing</td><td></td><td>None</td></tr>
+  <tr><td>an</td><td></td><td>None</td></tr>
+  <tr><td>Amy</td><td>Per</td><td>Per</td></tr>
+  <tr><td>Winehouse</td><td>Per</td><td>Per</td></tr>
+  <tr><td>story</td><td></td><td>None</td></tr>
 </table>
 
 <br>
