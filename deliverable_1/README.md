@@ -24,7 +24,7 @@ F1 : Harmonic mean of Precision and Recall
 
 The evaluations done here were based on partial matches. That is, if any word in an entity span was tagged correctly, the entire span is marked correct. For example, if the sentence is :
 
-Word		Gold Tag       Pred Tag
+Word		Gold Tag       Pred Tag<br>
 The 		Loc<br>
 entire		Loc<br>
 state		Loc<br>
