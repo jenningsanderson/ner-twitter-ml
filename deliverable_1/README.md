@@ -47,4 +47,8 @@ The evaluations done here were based on partial matches. That is, if any word in
 
 If the predicted annotation only marks "Colorado" as Loc, it counts the entire span "The entire state of Colorado" as correct. In the above data, this sentence would have 3 total spans, and 3 spans correct. Exact spans are much harder to match.
 
+CRF Model with all features, with results sorted by disaster type
 ![alt text](https://github.com/jenningsanderson/ner-twitter-ml/blob/master/deliverable_1/caps_by_domain.png "caps by domain, partial match")
+
+CRF Model with all features, with results sorted by entity type
+![alt text](https://github.com/jenningsanderson/ner-twitter-ml/blob/master/deliverable_1/caps_summary.png "caps by entity, partial match")
