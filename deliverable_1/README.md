@@ -45,26 +45,6 @@ The evaluations done here were based on partial matches. That is, if any word in
   <tr><td>story</td><td></td><td></td></tr>
 </table>
 
-<br>
-The 		Loc<br>
-entire		Loc<br>
-state		Loc<br>
-of		Loc<br>
-Colorado	Loc		Loc<br>
-is<br>
-on<br>
-fire<br>
-right<br>
-now<br>
-.<br>
-CNN		Org		Org<br>
-is<br>
-playing<br>
-an<br>
-Amy		Per		Per<br>
-winehouse	Per		Per<br>
-story<br>
-
 If the predicted annotation only marks "Colorado" as Loc, it counts the entire span "The entire state of Colorado" as correct. In the above data, this sentence would have 3 total spans, and 3 spans correct. Exact spans are much harder to match.
 
 ![alt text](https://github.com/jenningsanderson/ner-twitter-ml/blob/master/deliverable_1/caps_by_domain.png "caps by domain, partial match")
