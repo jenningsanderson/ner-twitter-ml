@@ -18,32 +18,31 @@
 Annotated Tweets from various disasters: floods, hurricanes, tornadoes, etc.
 
 ####Example Data Structure of tweets.json
-
-	["94537339",
-	 {"tweet_id"=>"94537339",
-	  "domain"=>"Wildfire",
-	  "disaster"=>"Colorado Wildfires June 2012",
-	  "words"=>
-	   [["The", "Location"],
-	    ["entire", "Location"],
-	    ["state", "Location"],
-	    ["of", "Location"],
-	    ["Colorado", "Location"],
-	    ["is", ""],
-	    ["on", ""],
-	    ["fire", ""],
-	    ["right", ""],
-	    ["now", ""],
-	    [".", ""],
-	    ["CNN", "Organization"],
-	    ["is", ""],
-	    ["playing", ""],
-	    ["an", ""],
-	    ["Amy", ""],
-	    ["Winehouse", ""],
-	    ["story", ""],
-	    [".", ""],
-	    ["#", ""],
-	    ["WaldoCanyonFire", ""]],
-	  "text"=>
-	   "The entire state of Colorado is on fire right now . CNN is playing an Amy Winehouse story . # WaldoCanyonFire"}]
+{
+key: u'95119995'
+domain: u'Wildfire'
+disaster: u'Colorado Wildfires June 2012'
+{u'text': u'Feel', u'features': [], u'annotations': u''}
+{u'text': u'bad', u'features': [], u'annotations': u''}
+{u'text': u'for', u'features': [], u'annotations': u''}
+{u'text': u'reporter', u'features': [], u'annotations': u'Person'}
+{u'text': u'trying', u'features': [], u'annotations': u'Person'}
+{u'text': u'to', u'features': [], u'annotations': u'Person'}
+{u'text': u'describe', u'features': [], u'annotations': u'Person'}
+{u'text': u'evacuation', u'features': [], u'annotations': u'Person'}
+{u'text': u'/', u'features': [], u'annotations': u''}
+{u'text': u'allowed', u'features': [], u'annotations': u''}
+{u'text': u'back', u'features': [], u'annotations': u''}
+{u'text': u'situation', u'features': [], u'annotations': u''}
+{u'text': u'.', u'features': [], u'annotations': u''}
+{u'text': u'Gosh', u'features': [], u'annotations': u''}
+{u'text': u',', u'features': [], u'annotations': u''}
+{u'text': u'Colorado', u'features': [], u'annotations': u'Location Facility'}
+{u'text': u'Springs', u'features': [], u'annotations': u'Location Facility'}
+{u'text': u'roads', u'features': [], u'annotations': u'Facility'}
+{u'text': u'are', u'features': [], u'annotations': u''}
+{u'text': u'confusing', u'features': [], u'annotations': u''}
+{u'text': u'!', u'features': [], u'annotations': u''}
+{u'text': u'#', u'features': [], u'annotations': u''}
+{u'text': u'WaldoCanyonFire', u'features': [], u'annotations': u''}
+}
