@@ -24,7 +24,7 @@ F1 : Harmonic mean of Precision and Recall
 
 The evaluations done here were based on partial matches. That is, if any word in an entity span was tagged correctly, the entire span is marked correct. For example, if the sentence is :
 <table>
-  <tr><td color="green">Word</td><td>Gold Tag</td><td>Pred Tag</td></tr>
+  <tr><td>Word</td><td>Gold Tag</td><td>Pred Tag</td></tr>
   <tr><td>The</td><td>Location</td><td></td></tr>
   <tr><td>entire</td><td>Location</td><td></td></tr>
   <tr><td>state</td><td>Location</td><td></td></tr>
