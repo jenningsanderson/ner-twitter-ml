@@ -23,11 +23,11 @@ Recall : For each instance that is actual a named entity, was it predicted as a 
 F1 : Harmonic mean of Precision and Recall
 
 The evaluations done here were based on partial matches. That is, if any word in an entity span was tagged correctly, the entire span is marked correct. For example, if the gold standard sentence is :
-The 		Loc
-entire		Loc
-state		Loc
-of		Loc
-Colorado	Loc
+The 		Loc<br>
+entire		Loc<br>
+state		Loc<br>
+of		Loc<br>
+Colorado	Loc<br>
 is
 on
 fire
