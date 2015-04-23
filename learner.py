@@ -46,24 +46,24 @@ if __name__ == "__main__":
     analyzer = Analyzer('Simplest case')
     feat = Featurizer(analyzer=analyzer)
 
-    x = [] 
-    y = []
+    data = []
 
     for tweet in loader.load_json_tweets('./data/tweets.json', limit=5000):
-        (a,b) = loader.tweet_to_vectors(tweet)
-        x += a
-        y += b
+        for labeled in loader.tweet_to_vectors(tweet):
+            data.append(labeled)
 
-    #These should be shuffled and such....
-    x_train = x[:4000]
-    y_train = y[:4000]
-    x_test = x[4001:]
-    y_test = y[4001:]
+    random.shuffle(data)
+    
+    train = data[:4000]
+    test  = data[4001:]
 
-    x_train = feat.train_feature(x_train)
-    x_test = feat.test_feature(x_test)
+    x_train = feat.train_feature( [t['text'] for t in train] )
+    x_test = feat.test_feature( [t['text'] for t in test] )
 
     print "Number of Features: %d" %(len(feat.vectorizer.get_feature_names()))
+
+    y_train = [t['label'] for t in train]
+
 
     # Train classifier
     lr = SGDClassifier(loss='log', penalty='l2', shuffle=True)
@@ -72,4 +72,4 @@ if __name__ == "__main__":
     #Write out Predictions
     predictions = lr.predict(x_test)
 
-    print metrics.classification_report(y_true=y_test, y_pred=predictions)
+    print metrics.classification_report(y_true=[t['label'] for t in test], y_pred=predictions)

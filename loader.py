@@ -18,14 +18,14 @@ def load_json_tweets(file, limit=None):
     return tweets
 
 def tweet_to_vectors(tweet):
-    x = []
-    y = []
+
+    labeled = []
    
     for w in tweet['words']:
         if w['annotations']:
-            x.append(w['text'])
-            y.append(w['annotations'].split(' ')[0])
-    return x,y
+            labeled.append( {'text': w['text'], 'label': w['annotations'].split(' ')[0] } )
+    
+    return labeled
 
 
 if __name__ == '__main__':
