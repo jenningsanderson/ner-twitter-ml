@@ -17,9 +17,30 @@ def load_json_tweets(file, limit=None):
 
     return tweets
 
+def tweet_to_vectors(tweet):
+    x = []
+    y = []
+   
+    for w in tweet['words']:
+        if w['annotations']:
+            x.append(w['text'])
+            y.append(w['annotations'])
+    return x,y
 
-def tweet_to_
 
 if __name__ == '__main__':
-    x = load_json_tweets('tweets.json')
-    print "Loaded %d Tweets" %( len(x) )
+    tweets = load_json_tweets('data/tweets.json', limit=10)
+    print "Loaded %d Tweets" %( len(tweets) )
+
+    x = [] 
+    y = []
+
+    for tweet in tweets:
+        (a,b) = tweet_to_vectors(tweet)
+        x += a
+        y += b
+
+    
+
+
+
