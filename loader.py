@@ -24,7 +24,7 @@ def tweet_to_vectors(tweet):
     for w in tweet['words']:
         if w['annotations']:
             x.append(w['text'])
-            y.append(w['annotations'])
+            y.append(w['annotations'].split(' ')[0])
     return x,y
 
 
@@ -39,8 +39,6 @@ if __name__ == '__main__':
         (a,b) = tweet_to_vectors(tweet)
         x += a
         y += b
-
-    
 
 
 
