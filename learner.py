@@ -7,6 +7,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn import metrics
 
+from sklearn.svm import SVC
+
 #NLTK:
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
@@ -25,6 +27,14 @@ class Analyzer:
 
         #Simplest, just yield the word itself as a feature
         yield text
+
+        if text[0].isupper():
+            yield "capitalized"
+
+        #Could potentially also yield all of the LIWC features -- but perhaps not.
+        
+
+
 
 
 class Featurizer:
@@ -69,7 +79,12 @@ if __name__ == "__main__":
     lr = SGDClassifier(loss='log', penalty='l2', shuffle=True)
     lr.fit(x_train, y_train)
 
+    # Train an SVM?
+    # clf = SVC()
+    # clf.fit(x_train, y_train) 
+
     #Write out Predictions
     predictions = lr.predict(x_test)
+    # predictions = clf.predict(x_test)
 
     print metrics.classification_report(y_true=[t['label'] for t in test], y_pred=predictions)
