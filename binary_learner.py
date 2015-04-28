@@ -37,7 +37,7 @@ class Featurizer:
     def __init__(self, analyzer):
         self.vectorizer = CountVectorizer(
             analyzer=analyzer,
-            max_features=2500000
+            max_features=250000
         )
 
     def train_feature(self, examples):
