@@ -17,7 +17,7 @@ class Organization(Entity):
 
     def featurize(self, features):
         return features
-   
+
 
 
 
