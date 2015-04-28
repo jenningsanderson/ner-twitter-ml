@@ -105,7 +105,7 @@ class Entity:
         self.build_features()
         self.train_svm_classifier()
         self.test_svm()
-        self.report_svm
+        self.report_svm()
 
     def do_full_lr(self):
         self.build_features()
@@ -136,7 +136,7 @@ class Artifact(Entity):
 
 if __name__ == "__main__":
 
-    limit       = None
+    limit       = 10000
 
     tweets = loader.load_json_tweets('./data/tweets.json', limit=limit)
 
