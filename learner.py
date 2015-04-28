@@ -1,12 +1,10 @@
 from csv import DictReader, DictWriter
 
-import numpy as np
 from numpy import array
 
+from sklearn import metrics
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import SGDClassifier
-from sklearn import metrics
-
 from sklearn.svm import SVC
 
 #NLTK:
@@ -19,10 +17,22 @@ import random
 import loader as loader
 
 
+# We need to be able to tag things with multiple labels.
+# Easiest to do 5 different categories.
+
+#
+# Will do this manually for each of the category
+#
+
+#
+# Rewrite the analyzer to look up the text
+#
+
+
 class Analyzer:
     def __init__(self, name):
         print "Initialized an Analyzer named: %s" %(name) #Just trying to remember how Python works
-        
+
     def __call__(self, text):
 
         #Simplest, just yield the word itself as a feature
@@ -32,7 +42,7 @@ class Analyzer:
             yield "capitalized"
 
         #Could potentially also yield all of the LIWC features -- but perhaps not.
-        
+
 
 
 
@@ -63,7 +73,7 @@ if __name__ == "__main__":
             data.append(labeled)
 
     random.shuffle(data)
-    
+
     train = data[:4000]
     test  = data[4001:]
 
@@ -81,7 +91,7 @@ if __name__ == "__main__":
 
     # Train an SVM?
     # clf = SVC()
-    # clf.fit(x_train, y_train) 
+    # clf.fit(x_train, y_train)
 
     #Write out Predictions
     predictions = lr.predict(x_test)
