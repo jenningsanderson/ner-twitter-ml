@@ -1,4 +1,5 @@
 import json
+import csv
 
 def load_json_tweets(file, limit=None):
     """
@@ -18,6 +19,19 @@ def load_json_tweets(file, limit=None):
             i+=1
 
     return tweets
+
+def load_csv_tweets(file, limit):
+    input_file = csv.DictReader(open(file))
+    to_return = []
+    
+    for row in input_file:
+        to_return.append(row)
+
+    if limit==None:
+        return to_return
+    else:
+        return to_return[0:limit]
+
 
 
 # UPDATE THIS TO INCLUDE NONE VALUES
