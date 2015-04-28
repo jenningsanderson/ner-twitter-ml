@@ -14,23 +14,8 @@ import re
 import random
 
 import loader as loader
+from entity import *
 import threading
-
-class Analyzer:
-    def __init__(self, name):
-        self.name = name
-        # print "Initialized an Analyzer named: %s" %(name) #Just trying to remember how Python works
-
-    def __call__(self, text):
-
-        #Simplest, just yield the word itself as a feature
-        yield text
-
-        if text[0].isupper():
-            yield "capitalized"
-
-        #This is where we should yield the LIWC features, depending on the type
-        #This is where we should yield the Parts of Speech depending on the word
 
 
 class Featurizer:
@@ -61,8 +46,7 @@ class Entity:
     def build_features(self, percent=80):
 
         #Make an analyzer & featurizer
-        self.analyzer = Analyzer("Analyzer for " + self.name)
-        self.feat = Featurizer(analyzer=self.analyzer)
+        self.feat = Featurizer(analyzer=self)
 
         random.shuffle(self.data)
 
@@ -80,6 +64,12 @@ class Entity:
         self.y_test    = [x['label'] for x in self.test_set]
 
         # print self.name+" Number of Features: %d" %(len(self.feat.vectorizer.get_feature_names()))
+
+    def __call__(self, text):
+        """
+        Default analyzer
+        """
+        yield text
 
     def train_lr_classifier(self):
         self.lr = SGDClassifier(loss='log', penalty='l2', shuffle=True)
@@ -114,29 +104,10 @@ class Entity:
         self.report_lr()
 
 
-class Location(Entity):
-    def __init__(self):
-        self.name = "Location"
-
-class Organization(Entity):
-    def __init__(self):
-        self.name = "Organization"
-
-class Facility(Entity):
-    def __init__(self):
-        self.name = "Facility"
-
-class Person(Entity):
-    def __init__(self):
-        self.name = "Person"
-
-class Artifact(Entity):
-    def __init__(self):
-        self.name = "Artifact"
 
 if __name__ == "__main__":
 
-    limit       = 10000
+    limit       = 100
 
     tweets = loader.load_json_tweets('./data/tweets.json', limit=limit)
 
@@ -156,6 +127,6 @@ if __name__ == "__main__":
         t.join()
 
     #Run all the classifiers in parallel:
-    for task in [ent.do_full_svm for ent in entities]:
+    for task in [ent.do_full_lr for ent in entities]:
         t = threading.Thread(target=task, args=())
         t.start()
