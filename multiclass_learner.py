@@ -63,7 +63,6 @@ if __name__ == "__main__":
 
     nones = find_the_none_nones(words, entities) #Get all of the none values
     random.shuffle(nones)
-    
 
     multiclass_data = []
     count = 0
