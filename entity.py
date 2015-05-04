@@ -18,6 +18,7 @@ class Organization(Entity):
         return {'word': features['Word']}
 
 
+
 class Facility(Entity):
     def __init__(self):
         self.name = "Facility"
@@ -31,11 +32,11 @@ class Person(Entity):
         self.name = "Person"
 
     def featurize(self, features):
-        return {'word' : features['Word']}
-        # return {'word': features['Word'],
-        #         'Pronoun'   : features['Pronoun'],'I'   : features['I'],'We'   : features['We'],'Self'   : features['Self'],
-        #         'You'   : features['You'],'Other'   : features['Other'],
-        #         'Social'   : features['Social'], 'othref':features['Othref']}
+        # return {'word' : features['Word']}
+        return {'word': features['Word'],
+                'Pronoun'   : features['Pronoun'],'I'   : features['I'],'We'   : features['We'],'Self'   : features['Self'],
+                'You'   : features['You'],'Other'   : features['Other'],
+                'Social'   : features['Social'], 'othref':features['Othref']}
 
 class Artifact(Entity):
     def __init__(self):

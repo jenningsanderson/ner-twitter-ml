@@ -1,7 +1,8 @@
 import loader as loader
-from Entity import *
+from entity import *
 from learner import Entity
 import threading
+import numpy as np
 
 if __name__ == "__main__":
 
@@ -25,8 +26,8 @@ if __name__ == "__main__":
         t.start()
         t.join()
 
-    This is where we actually run a classifier
-    Run all the classifiers in parallel:
+    #This is where we actually run a classifier
+    #Run all the classifiers in parallel:
     for task in [ent.do_full_svm for ent in entities]:
         t = threading.Thread(target=task, args=())
         t.start()

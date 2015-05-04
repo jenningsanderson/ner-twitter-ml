@@ -42,7 +42,7 @@ if __name__ == "__main__":
     limit       = 10000  #Limit of rows to load from the CSV
     iterations  = 5     #Number of iterations for the cross validation
 
-    words = loader.load_csv_tweets('./data/ling_context.csv', limit=limit)
+    words = loader.load_csv_tweets('./data/LIWC2001 Results_5class_new.csv', limit=limit)
     random.shuffle(words) #Shuffle the words here
 
 
