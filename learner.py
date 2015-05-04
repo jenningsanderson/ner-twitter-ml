@@ -1,100 +1,128 @@
-from csv import DictReader, DictWriter
-
 from numpy import array
+import numpy as np
+import copy, math
 
 from sklearn import metrics
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import SGDClassifier
-from sklearn.svm import SVC
+from sklearn.svm import LinearSVC
+from sklearn.feature_extraction import DictVectorizer
 
-#NLTK:
-from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
+from sklearn import cross_validation
 
 import re
 import random
 
-import loader as loader
 
 
-# We need to be able to tag things with multiple labels.
-# Easiest to do 5 different categories.
+class Entity:
+    def featurize(self, features):
+        #Default featurizer -- override these in the entity classes
+        return {"Word": features['Word']}
 
-#
-# Will do this manually for each of the category
-#
+    def import_full_feature(self, all_data, iterations, build_and_separate=True):
+        '''
+        Imports and shuffles all of the data for the SVM classifier
+        '''
+        self.all_data = copy.deepcopy(all_data)
+        random.shuffle(self.all_data)
+        self.iterations = iterations
+        self.not_nones = []
+        self.nones = []
+        for data in self.all_data:
+            if data[self.name] == self.name:
+                self.not_nones.append({'features':data,'text':data['Word'],'label':self.name})
+            else:
+                self.nones.append({'features':data,'text':data['Word'],'label':'None'})
 
-#
-# Rewrite the analyzer to look up the text
-#
+        self.nones = self.nones[:len(self.not_nones)]
+        self.data = self.not_nones + self.nones
 
+        random.shuffle(self.data)
 
-class Analyzer:
-    def __init__(self, name):
-        print "Initialized an Analyzer named: %s" %(name) #Just trying to remember how Python works
+        #This builds x_train_arr and y_train_arr...
+        if build_and_separate:
+            self.build_and_separate_features()
 
-    def __call__(self, text):
+    def import_static_x_vector(self, all_data):
+        '''
+        Imports self.data to be the same for all subclasses
+        '''
+        self.iterations = 1
+        self.not_nones = []
+        self.nones = []
+        for i in range(len(all_data)):
+            data = all_data[i]
+            if data[self.name] == self.name:
+                self.not_nones.append({'features':data, 'text':data['Word'], 'label':self.name, 'all_data_index':i})
+            else:
+                self.nones.append({'features':data, 'text':data['Word'], 'label':'None', 'all_data_index':i})
 
-        #Simplest, just yield the word itself as a feature
-        yield text
+        self.nones = self.nones[:len(self.not_nones)]
+        self.data = self.not_nones + self.nones
 
-        if text[0].isupper():
-            yield "capitalized"
-
-        #Could potentially also yield all of the LIWC features -- but perhaps not.
-
-
-
-
-
-class Featurizer:
-    def __init__(self, analyzer):
-        self.vectorizer = CountVectorizer(
-            analyzer=analyzer,
-            max_features=2500000
-            )
-
-    def train_feature(self, examples):
-        return self.vectorizer.fit_transform(examples)
-
-    def test_feature(self, examples):
-        return self.vectorizer.transform(examples)
-
-
-
-if __name__ == "__main__":
-    analyzer = Analyzer('Simplest case')
-    feat = Featurizer(analyzer=analyzer)
-
-    data = []
-
-    for tweet in loader.load_json_tweets('./data/tweets.json', limit=5000):
-        for labeled in loader.tweet_to_vectors(tweet):
-            data.append(labeled)
-
-    random.shuffle(data)
-
-    train = data[:4000]
-    test  = data[4001:]
-
-    x_train = feat.train_feature( [t['text'] for t in train] )
-    x_test = feat.test_feature( [t['text'] for t in test] )
-
-    print "Number of Features: %d" %(len(feat.vectorizer.get_feature_names()))
-
-    y_train = [t['label'] for t in train]
+        self.build_and_separate_features()
 
 
-    # Train classifier
-    lr = SGDClassifier(loss='log', penalty='l2', shuffle=True)
-    lr.fit(x_train, y_train)
+    def build_and_separate_features(self):
+        '''
+        Using a DictVectorizer and a cross validation shuffle splitter, split the data into training and test
+        '''
+        self.v = DictVectorizer()
 
-    # Train an SVM?
-    # clf = SVC()
-    # clf.fit(x_train, y_train)
+        # #Separate
+        self.cv = cross_validation.ShuffleSplit(len(self.data), n_iter=self.iterations, test_size=0.25, random_state=0)
 
-    #Write out Predictions
-    predictions = lr.predict(x_test)
-    # predictions = clf.predict(x_test)
+        self.x_train_arr = []
+        self.y_train_arr = []
+        self.x_test_arr =  []
+        self.y_test_arr =  []
 
-    print metrics.classification_report(y_true=[t['label'] for t in test], y_pred=predictions)
+        self.x_train_originals_arr = []
+
+        for train_index, test_index in self.cv:
+
+            self.x_train_arr.append( self.v.fit_transform( [ self.featurize( self.data[i]['features'] ) for i in train_index ] ) )
+            self.x_test_arr.append(  self.v.transform(     [ self.featurize( self.data[i]['features'] ) for i in test_index  ] ) )   
+            
+            self.y_train_arr.append( [ self.data[i]['label'] for i in train_index ] )
+            self.y_test_arr.append(  [ self.data[i]['label'] for i in test_index ]  )
+
+            self.x_train_originals_arr.append( [self.data[i] for i in train_index] )
+
+    def do_full_svm(self):
+        self.accuracies = [0]*self.iterations
+        self.precisions = [0]*self.iterations
+        self.recalls    = [0]*self.iterations
+        self.f1s        = [0]*self.iterations
+        for i in range(self.iterations):
+            self.clf = LinearSVC()
+            self.clf.fit(self.x_train_arr[i], self.y_train_arr[i])
+            self.svm_prediction = self.clf.predict(self.x_test_arr[i])
+
+            self.precisions[i] = metrics.precision_score(y_true=self.y_test_arr[i], y_pred=self.svm_prediction, pos_label=None)
+            self.recalls[i]    = metrics.recall_score(y_true=self.y_test_arr[i], y_pred=self.svm_prediction, pos_label=None)
+            self.f1s[i]        = metrics.f1_score(y_true=self.y_test_arr[i], y_pred=self.svm_prediction, pos_label=None)
+            self.accuracies[i] = metrics.accuracy_score(self.y_test_arr[i], self.svm_prediction)
+
+            print metrics.classification_report(y_true=self.y_test_arr[i], y_pred=self.svm_prediction)
+    
+    
+    def get_feature_probabilities(self, iteration=0):
+        "Print Starting the Decision Fusion Probabilities for ", self.name
+        self.decision_clf = LinearSVC(C=1)
+        self.decision_clf.fit(self.x_train_arr[iteration], self.y_train_arr[iteration])
+
+        dis_fun = self.decision_clf.decision_function(self.x_train_arr[iteration][0])[0]
+        probs_train = [1/(1+math.exp(-dis_fun))]
+        for j in range(1,len(self.y_train_arr[iteration])):
+            dis_fun= self.decision_clf.decision_function(self.x_train_arr[iteration][j])[0]
+            probs_train = np.vstack((probs_train,[1/(1+math.exp(-dis_fun))]))
+
+        print self.name
+        print np.shape(self.x_train_arr[iteration])
+        print np.shape(probs_train)
+
+        self.probs_train = probs_train
+        # for x in range(len(self.x_train_originals_arr[iteration])):
+        #     print self.name + ": "+ self.x_train_originals_arr[iteration][x]['text'] + " " +str(probs_train[x])
