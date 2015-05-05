@@ -12,7 +12,7 @@ from sklearn import cross_validation
 import re
 import random
 import loader as loader
-from learner import Entity
+from learner import Entity, pretty_print_performance
 from entity import *
 import threading
 
@@ -39,85 +39,82 @@ def featurize(features):
 
 if __name__ == "__main__":
 
-    limit       = 10000  #Limit of rows to load from the CSV
-    iterations  = 5     #Number of iterations for the cross validation
+    limit       = 5000  #Limit of rows to load from the CSV
+    iterations  = 3      #Number of iterations for the cross validation
+    outer_iters= 2      #Number of outer iterations
 
-    words = loader.load_csv_tweets('./data/ling_context.csv', limit=limit)
+    words = loader.load_csv_tweets('./data/LIWC2001 Results_5class_new.csv', limit=limit)
     random.shuffle(words) #Shuffle the words here
 
+    final_performance   = []
+    final_accuracies    = []
 
-    #Make a class for each piece
-    artifacts       = Artifact()
-    persons         = Person()
-    locations       = Location()
-    facilities      = Facility()
-    organizations   = Organization()
-    entities = [artifacts, persons, locations, facilities, organizations]
+    for jj in range(outer_iters):
+        print 'Outer Iteration ' + str(jj) + ' of ' + str(outer_iters)
 
-    #Import the data
-    import_tasks = [ent.import_full_feature for ent in entities]
-    for task in import_tasks:
-        t = threading.Thread(target=task, args=(words,iterations,False))
-        t.start()
-        t.join()
+        #Make a class for each piece
+        artifacts       = Artifact()
+        persons         = Person()
+        locations       = Location()
+        facilities      = Facility()
+        organizations   = Organization()
+        entities = [artifacts, persons, locations, facilities, organizations]
 
-    nones = find_the_none_nones(words, entities) #Get all of the none values
-    random.shuffle(nones)
+        #Import the data
+        import_tasks = [ent.import_full_feature for ent in entities]
+        for task in import_tasks:
+            t = threading.Thread(target=task, args=(words,iterations,False))
+            t.start()
+            t.join()
 
-    multiclass_data = []
-    count = 0
-    for ent in entities:
-        for data in ent.not_nones:
-            count+=1
-            multiclass_data.append(data)
+        nones = find_the_none_nones(words, entities) #Get all of the none values
+        random.shuffle(nones)
 
-    multiclass_data += nones[:count]
+        multiclass_data = []
+        count = 0
+        for ent in entities:
+            for data in ent.not_nones:
+                count+=1
+                multiclass_data.append(data)
 
-    #Build a dictvectorizer and start the crossvalidation options
-    v = DictVectorizer()
+        multiclass_data += nones[:count]
 
-    # #Separate
-    cv = cross_validation.ShuffleSplit(len(multiclass_data), n_iter=iterations, test_size=0.25, random_state=0)
+        #Build a dictvectorizer and start the crossvalidation options
+        v = DictVectorizer()
 
-    print cv
+        # #Separate
+        cv = cross_validation.ShuffleSplit(len(multiclass_data), n_iter=iterations, test_size=0.25, random_state=0)
 
-    x_train_arr = []
-    y_train_arr = []
-    x_test_arr =  []
-    y_test_arr =  []
+        x_train_arr = []
+        y_train_arr = []
+        x_test_arr =  []
+        y_test_arr =  []
 
-    for train_index, test_index in cv:
-        x_train_arr.append( v.fit_transform( [ featurize( multiclass_data[i]['features'] ) for i in train_index ] ) )
-        x_test_arr.append(  v.transform(     [ featurize( multiclass_data[i]['features'] ) for i in test_index  ] ) )   
+        for train_index, test_index in cv:
+            x_train_arr.append( v.fit_transform( [ featurize( multiclass_data[i]['features'] ) for i in train_index ] ) )
+            x_test_arr.append(  v.transform(     [ featurize( multiclass_data[i]['features'] ) for i in test_index  ] ) )   
 
-        y_train_arr.append( [ multiclass_data[i]['label'] for i in train_index ] )
-        y_test_arr.append(  [ multiclass_data[i]['label'] for i in test_index ]  )
-
-
-    accuracies = [0]*iterations
-    precisions = [0]*iterations
-    recalls    = [0]*iterations
-    f1s        = [0]*iterations
-    for i in range(iterations):
-        clf = LinearSVC()
-        clf.fit(x_train_arr[i], y_train_arr[i])
-        svm_prediction = clf.predict(x_test_arr[i])
-
-        precisions[i] = metrics.precision_score(y_true=y_test_arr[i], y_pred=svm_prediction, pos_label=None)
-        recalls[i]    = metrics.recall_score(y_true=y_test_arr[i], y_pred=svm_prediction, pos_label=None)
-        f1s[i]        = metrics.f1_score(y_true=y_test_arr[i], y_pred=svm_prediction, pos_label=None)
-        accuracies[i] = metrics.accuracy_score(y_test_arr[i], svm_prediction)
-
-        print "Metrics Classification for round: " + str(i)
-        print metrics.classification_report(y_true=y_test_arr[i], y_pred=svm_prediction)
+            y_train_arr.append( [ multiclass_data[i]['label'] for i in train_index ] )
+            y_test_arr.append(  [ multiclass_data[i]['label'] for i in test_index ]  )
 
 
-    print "Cross Validation for "+str(iterations)+" rounds."
-    print "Accuracy:  "+ str(np.average(accuracies) )
-    print "Recall:    "+ str(np.average(recalls)    )
-    print "Precision: "+ str(np.average(precisions) )
-    print "F1-Score:  "+ str(np.average(f1s)        )
-    print "==========================="
+        accuracies = [0]*iterations
+        this_round = []
+ 
+        for i in range(iterations):
+            clf = LinearSVC()
+            clf.fit(x_train_arr[i], y_train_arr[i])
+            svm_prediction = clf.predict(x_test_arr[i])
 
+            accuracies[i] = metrics.accuracy_score(y_test_arr[i], svm_prediction)
+            # print metrics.classification_report(y_true=y_test_arr[i], y_pred=svm_prediction)
+            this_round.append( metrics.precision_recall_fscore_support(y_true=y_test_arr[i], y_pred=svm_prediction) )
+
+        final_performance.append(np.mean(this_round, axis=0))
+        final_accuracies.append(np.mean(accuracies))
+
+    #Print performance results
+    pretty_print_performance(final_performance)
+    print "Final Accuracy: " + str(np.mean(final_accuracies))
 
 

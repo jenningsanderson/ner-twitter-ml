@@ -1,45 +1,49 @@
 from learner import Entity
 
+"""
+'Key','Filename','Segment','Word','WC','WPS','Sixltr','Dic','Unique','Abbreviations','Emoticons','Pronoun','I','We',
+                            'Self','You','Other','Negate','Assent','Article','Preps','Number','Affect','Posemo','Posfeel','Optim','Negemo',
+                            'Anx','Anger','Sad','Cogmech','Cause','Insight','Discrep','Inhib','Tentat','Certain','Senses','See','Hear', 'Feel',
+                            'Social','Comm','Othref','Friends','Family','Humans','Time','Past','Present','Future','Space','Up','Down','Incl',
+                            'Excl','Motion','Occup','School','Job','Achieve','Leisure','Home','Sports','TV','Music','Money','Metaph','Relig',
+                            'Death','Physcal','Body','Sexual','Eating','Sleep','Groom', 'Swear','Nonfl','Fillers',  'Period','Comma','Colon',
+                            'SemiC','QMark','Exclam','Dash','Quote','Apostro','Parenth','OtherP',   'AllPct','Caps','POS','Dep_rel','Dep_head', Artifact    Facility
+    'Artifact', 'Facility', 'Organization','Location','Person'
+"""
 class Location(Entity):
-    def __init__(self):
+    def __init__(self, features):
         self.name = "Location"
-
-    def featurize(self, features):
-        return {'word' : features['Word']}
-        # return {'word' : features['Word'],
-        #        'school': features['School']}
+        self.liwc = ['Quote','Space','Article','Preps','Incl','Affect','Posemo']
+        
+        self.build_features(features)
 
 
 class Organization(Entity):
-    def __init__(self):
+    def __init__(self, features):
         self.name = "Organization"
+        self.liwc = ['Pronoun','Social','Othref','Article','OtherP','Comma','Leisure','Job','Occup']
 
-    def featurize(self, features):
-        return {'word': features['Word']}
+        self.build_features(features)
 
 
 class Facility(Entity):
-    def __init__(self):
+    def __init__(self, features):
         self.name = "Facility"
+        self.liwc = ['Space','Leisure','Incl','Home','Leisure','Quote','Article','Preps']
 
-    def featurize(self, features):
-        return {'word': features['Word']}
-
+        self.build_features(features)
 
 class Person(Entity):
-    def __init__(self):
+    def __init__(self, features):
         self.name = "Person"
+        self.liwc = ['Pronoun','self','Othref','Social']
 
-    def featurize(self, features):
-        return {'word' : features['Word']}
-        # return {'word': features['Word'],
-        #         'Pronoun'   : features['Pronoun'],'I'   : features['I'],'We'   : features['We'],'Self'   : features['Self'],
-        #         'You'   : features['You'],'Other'   : features['Other'],
-        #         'Social'   : features['Social'], 'othref':features['Othref']}
+        self.build_features(features)
+
 
 class Artifact(Entity):
-    def __init__(self):
+    def __init__(self, features):
         self.name = "Artifact"
+        self.liwc = ['OtherP','Preps','Article','Space','Leisure','Home']
 
-    def featurize(self, features):
-        return {'word': features['Word']}
+        self.build_features(features)
