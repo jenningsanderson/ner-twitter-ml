@@ -3,11 +3,13 @@
 
 
 ##Use
+Do one-aginst-all classification in parallel:
 
-  class Entity
-    '''
-    
-    '''
+  python binary_learner.py
+
+Or do multiclass clssification:
+
+  python multiclass_learner.py
 
 
 ##Available Features
