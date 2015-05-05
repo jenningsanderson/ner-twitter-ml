@@ -8,17 +8,86 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.svm import LinearSVC
 from sklearn.feature_extraction import DictVectorizer
 
+from sklearn.utils.multiclass import unique_labels
+
 from sklearn import cross_validation
 
 import re
 import random
 
+def pretty_print_performance(final_performance, labels=["Artifact", "Facility", "Location", "None", "Organization", "Person"]):
+    '''
+    From metrics.classification_report
+    '''
+    labels = np.asarray(labels)
+    digits = 4
 
+    last_line_heading = 'avg / total'
+
+    width = len(last_line_heading)
+    target_names = ['%s' % l for l in labels]
+
+    headers = ["precision", "recall", "f1-score", "support"]
+    fmt = '%% %ds' % width  # first column: class name
+    fmt += '  '
+    fmt += ' '.join(['% 9s' for _ in headers])
+    fmt += '\n'
+
+    headers = [""] + headers
+    report = fmt % tuple(headers)
+    report += '\n'
+
+    p, r, f1, s = np.mean(final_performance, axis=0)
+
+    for i, label in enumerate(labels):
+        values = [target_names[i]]
+        for v in (p[i], r[i], f1[i]):
+            values += ["{0:0.{1}f}".format(v, digits)]
+        values += ["{0:0.{1}f}".format(s[i], 1)]
+        report += fmt % tuple(values)
+
+    report += '\n'
+
+    # compute averages
+    values = [last_line_heading]
+    for v in (np.average(p, weights=s),
+              np.average(r, weights=s),
+              np.average(f1, weights=s)):
+        values += ["{0:0.{1}f}".format(v, digits)]
+    values += ['{0}'.format(np.sum(s))]
+    report += fmt % tuple(values)
+    
+    print report
 
 class Entity:
+
+    def build_features(self, features):
+        self.ngrams = ['n-2','n-1','n+2','n+1']
+        self.word = ['Word']
+        self.texttype = ['Caps','POS','Dep_rel','Dep_head']
+
+        self.all_liwc = ['Abbreviations','Emoticons','Pronoun','I','We',
+                            'Self','You','Other','Negate','Assent','Article','Preps','Number','Affect','Posemo','Posfeel','Optim','Negemo',
+                            'Anx','Anger','Sad','Cogmech','Cause','Insight','Discrep','Inhib','Tentat','Certain','Senses','See','Hear', 'Feel',
+                            'Social','Comm','Othref','Friends','Family','Humans','Time','Past','Present','Future','Space','Up','Down','Incl',
+                            'Excl','Motion','Occup','School','Job','Achieve','Leisure','Home','Sports','TV','Music','Money','Metaph','Relig',
+                            'Death','Physcal','Body','Sexual','Eating','Sleep','Groom', 'Swear','Nonfl','Fillers',  'Period','Comma','Colon',
+                            'SemiC','QMark','Exclam','Dash','Quote','Apostro','Parenth','OtherP']
+
+        self.keys_to_featurize = []
+
+        for f in features:
+            for ff in self.__dict__[f]:
+                self.keys_to_featurize.append(ff)
+
     def featurize(self, features):
-        #Default featurizer -- override these in the entity classes
-        return {"Word": features['Word']}
+        to_return = {}
+
+        for key, value in features.iteritems():
+            if key in self.keys_to_featurize:
+                to_return[key] = value
+
+        return to_return
 
     def import_full_feature(self, all_data, iterations, build_and_separate=True):
         '''
@@ -91,22 +160,29 @@ class Entity:
             self.x_train_originals_arr.append( [self.data[i] for i in train_index] )
 
     def do_full_svm(self):
+
         self.accuracies = [0]*self.iterations
-        self.precisions = [0]*self.iterations
-        self.recalls    = [0]*self.iterations
-        self.f1s        = [0]*self.iterations
+
+        this_round = []
+
         for i in range(self.iterations):
             self.clf = LinearSVC()
             self.clf.fit(self.x_train_arr[i], self.y_train_arr[i])
-            self.svm_prediction = self.clf.predict(self.x_test_arr[i])
+            svm_prediction = self.clf.predict(self.x_test_arr[i])
 
-            self.precisions[i] = metrics.precision_score(y_true=self.y_test_arr[i], y_pred=self.svm_prediction, pos_label=None)
-            self.recalls[i]    = metrics.recall_score(y_true=self.y_test_arr[i], y_pred=self.svm_prediction, pos_label=None)
-            self.f1s[i]        = metrics.f1_score(y_true=self.y_test_arr[i], y_pred=self.svm_prediction, pos_label=None)
-            self.accuracies[i] = metrics.accuracy_score(self.y_test_arr[i], self.svm_prediction)
+            this_round.append( metrics.precision_recall_fscore_support(y_true=self.y_test_arr[i], y_pred=svm_prediction) )
 
-            # print metrics.classification_report(y_true=self.y_test_arr[i], y_pred=self.svm_prediction)
+            self.accuracies[i] = metrics.accuracy_score(self.y_test_arr[i], svm_prediction)
+
+            self.labels =  unique_labels(self.y_test_arr[i], svm_prediction)
+            print ".",
     
+        self.performance = np.mean(this_round, axis=0)
+        print ""
+
+    def pretty_print_entity_performance():
+        pretty_print_performance(self.performance, self.labels)
+
     
     def get_feature_probabilities(self, iteration=0):
         "Print Starting the Decision Fusion Probabilities for ", self.name

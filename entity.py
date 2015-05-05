@@ -11,68 +11,39 @@ from learner import Entity
     'Artifact', 'Facility', 'Organization','Location','Person'
 """
 class Location(Entity):
-    def __init__(self):
+    def __init__(self, features):
         self.name = "Location"
-
-    def featurize(self, features):
-        return {'word': features['Word'],
-                'Quote': features['Quote'],'Space': features['Space'],'Article':features['Article'],'Preps':features['Preps'],'Incl':features['Incl'],'Affect':features['Affect'],
-                'Posemo':features['Posemo'],
-                'Caps':features['Caps'],'POS':features['POS'],'Dep_rel':features['Dep_rel'],'Dep_head':features['Dep_head']
-}
-
+        self.liwc = ['Quote','Space','Article','Preps','Incl','Affect','Posemo']
+        
+        self.build_features(features)
 
 
 class Organization(Entity):
-    def __init__(self):
+    def __init__(self, features):
         self.name = "Organization"
+        self.liwc = ['Pronoun','Social','Othref','Article','OtherP','Comma','Leisure','Job','Occup']
 
-    def featurize(self, features):
-        return {'word': features['Word'],
-                'Pronoun'   : features['Pronoun'],'Social'   : features['Social'],'Othref'   : features['Othref'],'Article':features['Article'],
-                'OtherP'   : features['OtherP'],'Comma': features['Comma'],'Leisure'   : features['Leisure'],'Job':features['Job'],'Occup':features['Occup'],
-                'Caps':features['Caps'],'POS':features['POS'],'Dep_rel':features['Dep_rel'],'Dep_head':features['Dep_head']
-}
-
+        self.build_features(features)
 
 
 class Facility(Entity):
-    def __init__(self):
+    def __init__(self, features):
         self.name = "Facility"
+        self.liwc = ['Space','Leisure','Incl','Home','Leisure','Quote','Article','Preps']
 
-    def featurize(self, features):
-        return {'word': features['Word'],
-                'Space'   : features['Space'],'Leisure'   : features['Leisure'],'Incl'   : features['Incl'],'Home'   : features['Home'],
-                'Leisure'   : features['Leisure'],'Quote': features['Quote'],'Article':features['Article'],'Preps':features['Preps'],
-                'Caps':features['Caps'],'POS':features['POS'],'Dep_rel':features['Dep_rel'],'Dep_head':features['Dep_head']
-}
-
-
-
-
+        self.build_features(features)
 
 class Person(Entity):
-    def __init__(self):
+    def __init__(self, features):
         self.name = "Person"
+        self.liwc = ['Pronoun','self','Othref','Social']
 
-    def featurize(self, features):
-        #return features
-        
-        return {'word': features['Word'],
-                'Pronoun'   : features['Pronoun'],'self':features['Self'],'Othref':features['Othref'],
-                'Social'   : features['Social'],
-                'Caps':features['Caps'],'POS':features['POS'],'Dep_rel':features['Dep_rel'],'Dep_head':features['Dep_head']
-}
-
+        self.build_features(features)
 
 
 class Artifact(Entity):
-    def __init__(self):
+    def __init__(self, features):
         self.name = "Artifact"
+        self.liwc = ['OtherP','Preps','Article','Space','Leisure','Home']
 
-    def featurize(self, features):
-        return {'word': features['Word'],
-                'OtherP'   : features['OtherP'],'Preps':features['Preps'],
-                'Article':features['Article'],'Space' : features['Space'],'Leisure'   : features['Leisure'], 'Home'   : features['Home'],
-                'Caps':features['Caps'],'POS':features['POS'],'Dep_rel':features['Dep_rel'],'Dep_head':features['Dep_head']
-}
+        self.build_features(features)
