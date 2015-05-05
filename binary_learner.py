@@ -7,17 +7,19 @@ import numpy as np
 
 if __name__ == "__main__":
 
-    limit       = 10000  #Limit of rows to load from the CSV
+    limit       = None  #Limit of rows to load from the CSV
     iterations  = 10     #Number of iterations for the cross validation
-    outer_iterations = 15
+    outer_iterations = 1
 
-    out_file = "./output/all_liwc.csv"
+    out_file = "./output/ngrams_texttype_liwc_noLimit.csv"
 
-    features = ['all_liwc']
+    features = ['ngrams','word','texttype','liwc']
 
     start = time.clock()
 
     words = loader.load_csv_tweets('./data/LIWC2001 Results_5class_new.csv', limit=limit)
+
+    test_data = loader.load_csv_tweets('./data/test_set.csv')
 
     final_performances = {} 
     final_accuracies = {}
@@ -50,7 +52,7 @@ if __name__ == "__main__":
         #This is where we actually run a classifier
         #Run all the classifiers in parallel:
         for task in [ent.do_full_svm for ent in entities]:
-            t = threading.Thread(target=task, args=())
+            t = threading.Thread(target=task, args=(test_set))
             t.start()
             t.join()
 

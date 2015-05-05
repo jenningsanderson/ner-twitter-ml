@@ -7,9 +7,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.svm import LinearSVC
 from sklearn.feature_extraction import DictVectorizer
-
 from sklearn.utils.multiclass import unique_labels
-
 from sklearn import cross_validation
 
 import re
@@ -113,6 +111,12 @@ class Entity:
         if build_and_separate:
             self.build_and_separate_features()
 
+    def import_all_test_data(test_data):
+        test_data = copy.deepcopy(alldata)
+        self.test_set
+        for data in test_data:
+            self.test_set.append({'features':data,'text':data['Word'],'label':self.name})
+
     def import_static_x_vector(self, all_data):
         '''
         Imports self.data to be the same for all subclasses
@@ -183,7 +187,7 @@ class Entity:
     def pretty_print_entity_performance():
         pretty_print_performance(self.performance, self.labels)
 
-    
+
     def get_feature_probabilities(self, iteration=0):
         "Print Starting the Decision Fusion Probabilities for ", self.name
         self.decision_clf = LinearSVC(C=1)
