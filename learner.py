@@ -87,9 +87,11 @@ class Entity:
 
         return to_return
 
-    def import_full_feature(self, all_data, iterations, build_and_separate=True):
+    def import_full_feature(self, all_data, iterations, build_and_separate=True, limitNones=True, test_set=False, makeTest=True):
         '''
         Imports and shuffles all of the data for the SVM classifier
+
+        If test_set is set to True, then this is the test set that's being imported.
         '''
         self.all_data = copy.deepcopy(all_data)
         random.shuffle(self.all_data)
@@ -102,20 +104,21 @@ class Entity:
             else:
                 self.nones.append({'features':data,'text':data['Word'],'label':'None'})
 
-        self.nones = self.nones[:len(self.not_nones)]
-        self.data = self.not_nones + self.nones
+        if limitNones:
+            self.nones = self.nones[:len(self.not_nones)]
+        else:
+            self.data = self.not_nones + self.nones
+            random.shuffle(self.data)
 
-        random.shuffle(self.data)
+        if test_set:
+            self.x_test_arr = [ self.v.transform( [ self.featurize( self.data[i]['features'] ) for i in range(len(self.data)) ] ) ]
+            self.y_test_arr = [ [ self.data[i]['label'] for i in range(len(self.data)) ]  ]
 
+        
         #This builds x_train_arr and y_train_arr...
         if build_and_separate:
-            self.build_and_separate_features()
+            self.build_and_separate_features(makeTest)
 
-    def import_all_test_data(test_data):
-        test_data = copy.deepcopy(alldata)
-        self.test_set
-        for data in test_data:
-            self.test_set.append({'features':data,'text':data['Word'],'label':self.name})
 
     def import_static_x_vector(self, all_data):
         '''
@@ -137,29 +140,37 @@ class Entity:
         self.build_and_separate_features()
 
 
-    def build_and_separate_features(self):
+    def build_and_separate_features(self, test=True):
         '''
         Using a DictVectorizer and a cross validation shuffle splitter, split the data into training and test
         '''
         self.v = DictVectorizer()
 
-        # #Separate
-        self.cv = cross_validation.ShuffleSplit(len(self.data), n_iter=self.iterations, test_size=0.25, random_state=0)
+        if not test:
+            self.cv = cross_validation.ShuffleSplit(len(self.data), n_iter=self.iterations, test_size=0.0, random_state=0)
+        else:
+            self.cv = cross_validation.ShuffleSplit(len(self.data), n_iter=self.iterations, test_size=0.25, random_state=0)
 
         self.x_train_arr = []
         self.y_train_arr = []
-        self.x_test_arr =  []
-        self.y_test_arr =  []
+        
+        if test:
+            self.x_test_arr =  []
+            self.y_test_arr =  []
 
         self.x_train_originals_arr = []
 
         for train_index, test_index in self.cv:
 
             self.x_train_arr.append( self.v.fit_transform( [ self.featurize( self.data[i]['features'] ) for i in train_index ] ) )
-            self.x_test_arr.append(  self.v.transform(     [ self.featurize( self.data[i]['features'] ) for i in test_index  ] ) )   
+            
+            if test:
+                self.x_test_arr.append(  self.v.transform(     [ self.featurize( self.data[i]['features'] ) for i in test_index  ] ) )   
             
             self.y_train_arr.append( [ self.data[i]['label'] for i in train_index ] )
-            self.y_test_arr.append(  [ self.data[i]['label'] for i in test_index ]  )
+            
+            if test:
+                self.y_test_arr.append(  [ self.data[i]['label'] for i in test_index ]  )
 
             self.x_train_originals_arr.append( [self.data[i] for i in train_index] )
 

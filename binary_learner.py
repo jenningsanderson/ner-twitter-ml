@@ -11,7 +11,7 @@ if __name__ == "__main__":
     iterations  = 10     #Number of iterations for the cross validation
     outer_iterations = 1
 
-    out_file = "./output/ngrams_texttype_liwc_noLimit.csv"
+    out_file = "./output/ngrams_texttype_liwc_noLimit_testSet.csv"
 
     features = ['ngrams','word','texttype','liwc']
 
