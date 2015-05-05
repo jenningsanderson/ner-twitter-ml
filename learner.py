@@ -105,7 +105,7 @@ class Entity:
             self.f1s[i]        = metrics.f1_score(y_true=self.y_test_arr[i], y_pred=self.svm_prediction, pos_label=None)
             self.accuracies[i] = metrics.accuracy_score(self.y_test_arr[i], self.svm_prediction)
 
-            print metrics.classification_report(y_true=self.y_test_arr[i], y_pred=self.svm_prediction)
+            # print metrics.classification_report(y_true=self.y_test_arr[i], y_pred=self.svm_prediction)
     
     
     def get_feature_probabilities(self, iteration=0):
