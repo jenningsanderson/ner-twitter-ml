@@ -12,9 +12,9 @@ if __name__ == "__main__":
     iterations          = 10    #Number of iterations for the cross validation (shuffle and split)
     outer_iterations    = 1
     use_test_data       = False
-    out_file            = "./output/word_ngram_texttype_all_liwc.csv"
+    out_file            = "./output/word_ngrams_texttype_liwc_noLimit.csv"
 
-    features            = ['word','ngrams','texttype','all_liwc']
+    features            = ['word','ngrams','texttype','liwc']
 
     '''
                         ['word','ngrams','texttype','all_liwc']
