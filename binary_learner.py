@@ -6,31 +6,48 @@ import threading, time
 import numpy as np
 
 if __name__ == "__main__":
-
-    limit       = None  #Limit of rows to load from the CSV
-    iterations  = 10     #Number of iterations for the cross validation
-    outer_iterations = 1
-
-    out_file = "./output/ngrams_texttype_liwc_noLimit.csv"
-
-    features = ['ngrams','word','texttype','liwc']
-
     start = time.clock()
+
+    limit               = None  #Limit of rows to load from the CSV
+    iterations          = 10     #Number of iterations for the cross validation
+    outer_iterations    = 1
+    use_test_data       = False
+    out_file            = "./output/not_limiting_nones.csv"
+
+    features            = ['ngrams','word','texttype','liwc']
+
+
 
     words = loader.load_csv_tweets('./data/LIWC2001 Results_5class_new.csv', limit=limit)
 
-    test_data = loader.load_csv_tweets('./data/test_set.csv')
+    #Defaults
+    args = {'all_data'           : words, 
+            'iterations'         : iterations, 
+            'build_and_separate' : True,
+            'limitNones'         : True,
+            'test_set'           : False, 
+            'makeTest'           : True}
 
+
+
+    if use_test_data:
+        test_data = loader.load_csv_tweets('./data/test_set.csv', limit=limit)
+        test_args = {'all_data'  : test_data, 
+            'iterations'         : iterations, 
+            'build_and_separate' : True,
+            'limitNones'         : True,
+            'test_set'           : False, 
+            'makeTest'           : False}
+        args['makeTest'] = False
+
+
+    #Logging
     final_performances = {} 
     final_accuracies = {}
-
     entity_names =['Artifact','Person','Location','Facility','Organization']
-    
     for ent in entity_names:
         final_accuracies[ent] =[]
         final_performances[ent] = [] 
-
-    
     
     for itx in range(outer_iterations):
         print "Outer Iteration: " + str(itx+1)
@@ -43,16 +60,27 @@ if __name__ == "__main__":
         entities = [artifacts, persons, locations, facilities, organizations]
 
         #Import the data
+        
         import_tasks = [ent.import_full_feature for ent in entities]
         for task in import_tasks:
-            t = threading.Thread(target=task, args=(words,iterations))
+            t = threading.Thread(target=task, args=(args,))
             t.start()
             t.join()
+
+        
+        #Are we using test data?
+        if use_test_data:
+            import_test_tasks = [ent.import_full_feature for ent in entities]
+            for task in import_test_tasks:
+                t = threading.Thread(target=task, args=(test_args,))
+                t.start()
+                t.join()
+
 
         #This is where we actually run a classifier
         #Run all the classifiers in parallel:
         for task in [ent.do_full_svm for ent in entities]:
-            t = threading.Thread(target=task, args=(test_set))
+            t = threading.Thread(target=task, args=())
             t.start()
             t.join()
 

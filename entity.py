@@ -21,7 +21,7 @@ class Location(Entity):
 class Organization(Entity):
     def __init__(self, features):
         self.name = "Organization"
-        self.liwc = ['Pronoun','Social','Othref','Article','OtherP','Comma','Leisure','Job','Occup']
+        self.liwc = ['Social','Othref','Article','Leisure']
 
         self.build_features(features)
 
@@ -29,7 +29,7 @@ class Organization(Entity):
 class Facility(Entity):
     def __init__(self, features):
         self.name = "Facility"
-        self.liwc = ['Space','Leisure','Incl','Home','Leisure','Quote','Article','Preps']
+        self.liwc = ['Space', 'Incl','Leisure','Home','Quote','Article','Preps']
 
         self.build_features(features)
 
