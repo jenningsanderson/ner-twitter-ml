@@ -74,9 +74,10 @@ class Entity:
 
         self.keys_to_featurize = []
 
-        for f in features:
-            for ff in self.__dict__[f]:
-                self.keys_to_featurize.append(ff)
+        if features is not None:
+            for f in features:
+                for ff in self.__dict__[f]:
+                    self.keys_to_featurize.append(ff)
 
     def featurize(self, features):
         to_return = {}
