@@ -9,12 +9,16 @@ if __name__ == "__main__":
     start = time.clock()
 
     limit               = None  #Limit of rows to load from the CSV
-    iterations          = 10     #Number of iterations for the cross validation
+    iterations          = 10    #Number of iterations for the cross validation (shuffle and split)
     outer_iterations    = 1
     use_test_data       = False
-    out_file            = "./output/not_limiting_nones.csv"
+    out_file            = "./output/word_ngrams_texttype_liwc_noLimit.csv"
 
-    features            = ['ngrams','word','texttype','liwc']
+    features            = ['word','ngrams','texttype','liwc']
+
+    '''
+                        ['word','ngrams','texttype','all_liwc']
+    '''
 
 
 

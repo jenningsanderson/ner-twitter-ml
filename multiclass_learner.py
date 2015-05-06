@@ -8,6 +8,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.svm import LinearSVC
 from sklearn.feature_extraction import DictVectorizer
 from sklearn import cross_validation
+from sklearn.utils.multiclass import unique_labels
 
 import re
 import random
@@ -39,12 +40,21 @@ def featurize(features):
 
 if __name__ == "__main__":
 
-    limit       = 5000  #Limit of rows to load from the CSV
-    iterations  = 3      #Number of iterations for the cross validation
-    outer_iters= 2      #Number of outer iterations
+    limit       = None  #Limit of rows to load from the CSV
+    iterations  = 10      #Number of iterations for the cross validation
+    outer_iters = 5      #Number of outer iterations
 
     words = loader.load_csv_tweets('./data/LIWC2001 Results_5class_new.csv', limit=limit)
     random.shuffle(words) #Shuffle the words here
+
+    features = ['']
+
+    args = {'all_data'           : words, 
+            'iterations'         : iterations, 
+            'build_and_separate' : False,
+            'limitNones'         : True,
+            'test_set'           : False, 
+            'makeTest'           : True}
 
     final_performance   = []
     final_accuracies    = []
@@ -53,17 +63,17 @@ if __name__ == "__main__":
         print 'Outer Iteration ' + str(jj) + ' of ' + str(outer_iters)
 
         #Make a class for each piece
-        artifacts       = Artifact()
-        persons         = Person()
-        locations       = Location()
-        facilities      = Facility()
-        organizations   = Organization()
+        artifacts       = Artifact( None)
+        persons         = Person(   None )
+        locations       = Location( None )
+        facilities      = Facility( None )
+        organizations   = Organization( None )
         entities = [artifacts, persons, locations, facilities, organizations]
 
         #Import the data
         import_tasks = [ent.import_full_feature for ent in entities]
         for task in import_tasks:
-            t = threading.Thread(target=task, args=(words,iterations,False))
+            t = threading.Thread(target=task, args=(args,))
             t.start()
             t.join()
 
@@ -116,5 +126,4 @@ if __name__ == "__main__":
     #Print performance results
     pretty_print_performance(final_performance)
     print "Final Accuracy: " + str(np.mean(final_accuracies))
-
-
+    
