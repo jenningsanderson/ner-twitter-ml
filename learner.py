@@ -112,8 +112,8 @@ class Entity:
         random.shuffle(self.data)
 
         if args['test_set']:
-            self.x_test_arr = [ self.v.transform( [ self.featurize( self.data[i]['features'] ) for i in range(len(self.data)) ] ) ]
-            self.y_test_arr = [ [ self.data[i]['label'] for i in range(len(self.data)) ]  ]
+            self.x_test_arr = [ self.v.transform( [ self.featurize( d['features'] ) for d in self.data ] ) ]
+            self.y_test_arr = [ [ d['label'] for d in self.data ]  ]
 
         
         #This builds x_train_arr and y_train_arr...
@@ -161,19 +161,25 @@ class Entity:
 
         self.x_train_originals_arr = []
 
-        for train_index, test_index in self.cv:
+        if not makeTest:
+            #if we're not making the test array, then the training array should be simpler.
+            self.x_train_arr = [ self.v.fit_transform( [ self.featurize( d['features'] ) for d in self.data ] ) ]
+            self.y_train_arr = [ [ d['label'] for d in self.data ] ]
 
-            self.x_train_arr.append( self.v.fit_transform( [ self.featurize( self.data[i]['features'] ) for i in train_index ] ) )
-            
-            if makeTest:
-                self.x_test_arr.append(  self.v.transform(     [ self.featurize( self.data[i]['features'] ) for i in test_index  ] ) )   
-            
-            self.y_train_arr.append( [ self.data[i]['label'] for i in train_index ] )
-            
-            if makeTest:
-                self.y_test_arr.append(  [ self.data[i]['label'] for i in test_index ]  )
+        else:
+            for train_index, test_index in self.cv:
 
-            self.x_train_originals_arr.append( [self.data[i] for i in train_index] )
+                self.x_train_arr.append( self.v.fit_transform( [ self.featurize( self.data[i]['features'] ) for i in train_index ] ) )
+                
+                if makeTest:
+                    self.x_test_arr.append(  self.v.transform(     [ self.featurize( self.data[i]['features'] ) for i in test_index  ] ) )   
+                
+                self.y_train_arr.append( [ self.data[i]['label'] for i in train_index ] )
+                
+                if makeTest:
+                    self.y_test_arr.append(  [ self.data[i]['label'] for i in test_index ]  )
+
+                self.x_train_originals_arr.append( [self.data[i] for i in train_index] )
 
     def do_full_svm(self):
 

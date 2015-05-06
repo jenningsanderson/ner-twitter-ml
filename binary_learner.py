@@ -9,10 +9,10 @@ if __name__ == "__main__":
     start = time.clock()
 
     limit               = None  #Limit of rows to load from the CSV
-    iterations          = 10    #Number of iterations for the cross validation (shuffle and split)
+    iterations          = 1    #Number of iterations for the cross validation (shuffle and split)
     outer_iterations    = 1
-    use_test_data       = False
-    out_file            = "./output/word_ngrams_texttype_liwc_noLimit.csv"
+    use_test_data       = True
+    out_file            = "./output/best_features_test_set.csv"
 
     features            = ['word','ngrams','texttype','liwc']
 
@@ -35,14 +35,15 @@ if __name__ == "__main__":
 
 
     if use_test_data:
-        test_data = loader.load_csv_tweets('./data/test_set.csv', limit=limit)
+        test_data = loader.load_csv_tweets('./data/LIWC2001 Results_test_set.csv', limit=limit)
         test_args = {'all_data'  : test_data, 
-            'iterations'         : iterations, 
-            'build_and_separate' : True,
+            'iterations'         : 1, 
+            'build_and_separate' : False,
             'limitNones'         : True,
-            'test_set'           : False, 
+            'test_set'           : True, 
             'makeTest'           : False}
         args['makeTest'] = False
+        args['iterations'] = 1
 
 
     #Logging
@@ -58,7 +59,7 @@ if __name__ == "__main__":
         #Make a class for each piece
         artifacts       = Artifact(     features )
         persons         = Person(       features )
-        locations       = Location(     features )
+        locations       = Location(     ['word','ngrams','texttype','all_liwc'] )
         facilities      = Facility(     features )
         organizations   = Organization( features )
         entities = [artifacts, persons, locations, facilities, organizations]
